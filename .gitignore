@@ -1,0 +1,10 @@
+models/
+*.pkl
+
+env/
+__pycache__/
+models/
+*.pkl
+*.h5
+*.pt
+*.pth

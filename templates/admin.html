@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Admin Login</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+    *{
+        margin:0;
+        padding:0;
+        box-sizing:border-box;
+        font-family:'Poppins',sans-serif;
+    }
+
+    body{
+
+        height:100vh;
+
+        display:flex;
+
+        justify-content:center;
+
+        align-items:center;
+
+        overflow:hidden;
+
+        background:linear-gradient(-45deg,#0f2027,#203a43,#2c5364,#4b6cb7);
+
+        background-size:400% 400%;
+
+        animation:bgAnimation 12s ease infinite;
+
+    }
+
+    /* Animated Background */
+
+    @keyframes bgAnimation{
+
+    0%{background-position:0% 50%;}
+
+    50%{background-position:100% 50%;}
+
+    100%{background-position:0% 50%;}
+
+    }
+
+    body::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:450px;
+
+    height:450px;
+
+    background:#00e5ff;
+
+    border-radius:50%;
+
+    top:-180px;
+
+    left:-180px;
+
+    filter:blur(140px);
+
+    opacity:.45;
+
+    animation:move1 8s infinite alternate;
+
+    }
+
+    body::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:400px;
+
+    height:400px;
+
+    background:#ff00aa;
+
+    border-radius:50%;
+
+    bottom:-150px;
+
+    right:-150px;
+
+    filter:blur(120px);
+
+    opacity:.40;
+
+    animation:move2 8s infinite alternate;
+
+    }
+
+    @keyframes move1{
+
+    100%{
+
+    transform:translate(120px,90px);
+
+    }
+
+    }
+
+    @keyframes move2{
+
+    100%{
+
+    transform:translate(-100px,-70px);
+
+    }
+
+    }
+
+    /* Login Card */
+
+    .login-card{
+
+    width:430px;
+
+    border:none;
+
+    border-radius:25px;
+
+    background:rgba(255,255,255,.12);
+
+    backdrop-filter:blur(18px);
+
+    -webkit-backdrop-filter:blur(18px);
+
+    border:1px solid rgba(255,255,255,.18);
+
+    box-shadow:
+
+    0 15px 45px rgba(0,0,0,.4),
+
+    inset 0 1px 0 rgba(255,255,255,.15);
+
+    transition:.5s;
+
+    animation:float 5s ease-in-out infinite;
+
+    }
+
+    .login-card:hover{
+
+    transform:
+
+    perspective(1200px)
+
+    rotateX(8deg)
+
+    rotateY(-8deg)
+
+    translateY(-12px)
+
+    scale(1.03);
+
+    box-shadow:
+
+    0 35px 70px rgba(0,0,0,.55);
+
+    }
+
+    @keyframes float{
+
+    0%,100%{
+
+    transform:translateY(0px);
+
+    }
+
+    50%{
+
+    transform:translateY(-10px);
+
+    }
+
+    }
+
+    /* Heading */
+
+    h2{
+
+    font-weight:700;
+
+    color:#fff !important;
+
+    text-shadow:0 4px 12px rgba(0,0,0,.35);
+
+    }
+
+    h5{
+
+    color:#ddd !important;
+
+    }
+
+    /* Labels */
+
+    label{
+
+    color:#fff;
+
+    font-weight:500;
+
+    }
+
+    /* Input */
+
+    .form-control{
+
+    background:rgba(255,255,255,.15);
+
+    border:none;
+
+    border-radius:15px;
+
+    padding:14px;
+
+    color:#fff;
+
+    transition:.35s;
+
+    }
+
+    .form-control::placeholder{
+
+    color:#ddd;
+
+    }
+
+    .form-control:focus{
+
+    background:rgba(255,255,255,.25);
+
+    color:white;
+
+    box-shadow:
+
+    0 0 20px #00e5ff;
+
+    transform:scale(1.03);
+
+    }
+
+    /* Button */
+
+    .btn-primary{
+
+    background:linear-gradient(135deg,#00c6ff,#0072ff);
+
+    border:none;
+
+    border-radius:15px;
+
+    padding:12px;
+
+    font-size:18px;
+
+    font-weight:600;
+
+    transition:.35s;
+
+    box-shadow:
+
+    0 12px 30px rgba(0,114,255,.45);
+
+    }
+
+    .btn-primary:hover{
+
+    transform:
+
+    translateY(-5px)
+
+    scale(1.05);
+
+    background:linear-gradient(135deg,#00e5ff,#005eff);
+
+    }
+
+    /* Alert */
+
+    .alert{
+
+    border:none;
+
+    border-radius:15px;
+
+    background:rgba(255,0,0,.15);
+
+    color:white;
+
+    backdrop-filter:blur(10px);
+
+    }
+
+    /* Card Body */
+
+    .card-body{
+
+    padding:45px;
+
+    }
+
+    /* Mobile */
+
+    @media(max-width:576px){
+
+    .login-card{
+
+    width:95%;
+
+    }
+
+    }
+
+</style>
+
+</head>
+
+<body>
+
+<div class="card shadow-lg login-card">
+
+    <div class="card-body p-5">
+
+        <h2 class="text-center text-primary mb-4">
+
+            AI Drug Recommendation System
+
+        </h2>
+
+        <h5 class="text-center text-secondary mb-4">
+
+            Admin Login
+
+        </h5>
+
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+
+            {% for message in messages %}
+
+                <div class="alert alert-danger">
+
+                    {{ message }}
+
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+        {% endwith %}
+
+        <form method="POST">
+
+            <div class="mb-3">
+
+                <label class="form-label">
+
+                    Username
+
+                </label>
+
+                <input
+                    type="text"
+                    class="form-control"
+                    name="username"
+                    placeholder="Enter Username"
+                    required>
+
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label">Password</label>
+
+                <input
+                    type="password"
+                    class="form-control"
+                    name="password"
+                    placeholder="Enter Password"
+                    required>
+
+                <small class="text-warning mt-2 d-block">
+                    Password must contain:
+                    <ul class="mb-0 mt-1">
+                        <li>Minimum 8 characters</li>
+                        <li>At least 1 uppercase letter (A-Z)</li>
+                        <li>At least 1 number (0-9)</li>
+                        <li>At least 1 special character (@#$%^&*! etc.)</li>
+                    </ul>
+                </small>
+            </div>
+
+            <button
+                type="submit"
+                class="btn btn-primary w-100">
+
+                Login
+
+            </button>
+
+        </form>
+
+        
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

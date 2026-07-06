@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>AI Drug Search Result</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+
+min-height:100vh;
+
+background:linear-gradient(-45deg,#0f172a,#1e3a8a,#0f766e,#312e81);
+
+background-size:400% 400%;
+
+animation:bgAnimation 12s ease infinite;
+
+overflow-x:hidden;
+
+color:white;
+
+}
+
+/* Animated Background */
+
+@keyframes bgAnimation{
+
+0%{background-position:0% 50%;}
+
+50%{background-position:100% 50%;}
+
+100%{background-position:0% 50%;}
+
+}
+
+body::before{
+
+content:"";
+
+position:fixed;
+
+width:500px;
+
+height:500px;
+
+background:#3b82f6;
+
+top:-180px;
+
+left:-180px;
+
+border-radius:50%;
+
+filter:blur(130px);
+
+opacity:.45;
+
+animation:floatLeft 8s ease-in-out infinite alternate;
+
+z-index:-1;
+
+}
+
+body::after{
+
+content:"";
+
+position:fixed;
+
+width:450px;
+
+height:450px;
+
+background:#06b6d4;
+
+right:-150px;
+
+bottom:-150px;
+
+border-radius:50%;
+
+filter:blur(120px);
+
+opacity:.40;
+
+animation:floatRight 8s ease-in-out infinite alternate;
+
+z-index:-1;
+
+}
+
+@keyframes floatLeft{
+
+100%{
+
+transform:translate(120px,80px);
+
+}
+
+}
+
+@keyframes floatRight{
+
+100%{
+
+transform:translate(-120px,-80px);
+
+}
+
+}
+
+/* Main Container */
+
+.container{
+
+animation:fadeUp .8s ease;
+
+}
+
+@keyframes fadeUp{
+
+from{
+
+opacity:0;
+
+transform:translateY(40px);
+
+}
+
+to{
+
+opacity:1;
+
+transform:translateY(0);
+
+}
+
+}
+
+/* Result Card */
+
+.card{
+
+background:rgba(255,255,255,.12)!important;
+
+backdrop-filter:blur(18px);
+
+border:1px solid rgba(255,255,255,.15);
+
+border-radius:25px;
+
+box-shadow:0 20px 50px rgba(0,0,0,.35);
+
+transition:.45s;
+
+overflow:hidden;
+
+}
+
+.card:hover{
+
+transform:
+
+perspective(1200px)
+
+rotateX(5deg)
+
+rotateY(-5deg)
+
+translateY(-10px)
+
+scale(1.02);
+
+box-shadow:0 35px 80px rgba(0,0,0,.55);
+
+}
+
+/* Header */
+
+.card-header{
+
+background:linear-gradient(135deg,#2563eb,#0891b2)!important;
+
+border:none;
+
+}
+
+.card-header h4{
+
+margin:0;
+
+font-size:28px;
+
+font-weight:700;
+
+color:white;
+
+text-shadow:0 3px 10px rgba(0,0,0,.35);
+
+}
+
+/* Page Heading */
+
+h2{
+
+font-size:42px;
+
+font-weight:700;
+
+text-align:center;
+
+margin-bottom:30px;
+
+color:white;
+
+text-shadow:0 4px 18px rgba(0,0,0,.45);
+
+}
+
+/* Table */
+
+.table{
+
+color:white;
+
+margin-bottom:0;
+
+}
+
+.table th{
+
+width:30%;
+
+background:rgba(255,255,255,.12);
+
+color:#38bdf8;
+
+font-weight:600;
+
+}
+
+.table td{
+
+background:rgba(255,255,255,.05);
+
+color:white;
+
+transition:.3s;
+
+}
+
+.table tr:hover td{
+
+background:rgba(255,255,255,.12);
+
+}
+
+/* Scroll */
+
+.table-responsive{
+
+border-radius:20px;
+
+overflow:hidden;
+
+}
+
+/* Rating Badge */
+
+.rating{
+
+display:inline-block;
+
+padding:8px 18px;
+
+border-radius:30px;
+
+background:linear-gradient(135deg,#f59e0b,#f97316);
+
+font-weight:700;
+
+box-shadow:0 5px 15px rgba(0,0,0,.35);
+
+}
+
+/* Not Found */
+
+.alert-danger{
+
+background:rgba(220,53,69,.18);
+
+border:none;
+
+border-radius:20px;
+
+backdrop-filter:blur(12px);
+
+color:white;
+
+box-shadow:0 10px 25px rgba(0,0,0,.3);
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<div class="container py-5">
+
+<h2>
+
+💊 AI Drug Search Result
+
+</h2>
+
+{% if found %}
+
+{% for drug in results %}
+
+<div class="card mb-5">
+
+<div class="card-header d-flex justify-content-between align-items-center">
+
+<h4>
+
+💊 {{ drug.drug_name }}
+
+</h4>
+
+<span class="badge bg-success fs-6">
+
+Available
+
+</span>
+
+</div>
+
+<div class="card-body">
+
+<div class="table-responsive">
+
+<table class="table align-middle table-borderless">
+
+<tbody>
+
+<tr>
+
+<th>
+
+🧬 Drug Name
+
+</th>
+
+<td>
+
+{{ drug.drug_name }}
+
+</td>
+
+</tr>
+
+<tr>
+
+<th>
+
+🩺 Medical Condition
+
+</th>
+
+<td>
+
+{{ drug.medical_condition }}
+
+</td>
+
+</tr>
+
+<tr>
+
+<th>
+
+🧪 Generic Name
+
+</th>
+
+<td>
+
+{{ drug.generic_name }}
+
+</td>
+
+</tr>
+
+<tr>
+
+<th>
+
+💉 Drug Class
+
+</th>
+
+<td>
+
+<span class="badge bg-primary fs-6">
+
+{{ drug.drug_classes }}
+
+</span>
+
+</td>
+
+</tr>
+
+<tr>
+
+<th>
+
+🏭 Brand Name
+
+</th>
+
+<td>
+
+{{ drug.brand_names }}
+
+</td>
+
+</tr>
+
+<tr>
+
+<th>
+
+⚙ Activity
+
+</th>
+
+<td>
+
+<span class="badge bg-info text-dark fs-6">
+
+{{ drug.activity }}
+
+</span>
+
+</td>
+
+</tr>
+
+<tr>
+
+<th>
+
+⭐ Rating
+
+</th>
+
+<td>
+
+<span class="rating">
+
+⭐ {{ drug.rating }}/10
+
+</span>
+
+</td>
+
+</tr>
+
+<tr>
+
+<th>
+
+👥 Reviews
+
+</th>
+
+<td>
+
+{{ drug.no_of_reviews }}
+
+Reviews
+
+</td>
+
+</tr>
+
+<tr>
+
+<th>
+
+⚠ Side Effects
+
+</th>
+
+<td>
+
+<div class="p-3 rounded-4 bg-dark bg-opacity-25">
+
+{{ drug.side_effects }}
+
+</div>
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+{% else %}
+
+<div class="alert alert-danger text-center p-5">
+
+<h3>
+
+❌ Drug Not Found
+
+</h3>
+
+<br>
+
+<p class="fs-5">
+
+No medicine found for
+
+<b>
+
+"{{ keyword }}"
+
+</b>
+
+</p>
+
+<p>
+
+Try another Drug Name or Medical Condition.
+
+</p>
+
+</div>
+
+{% endif %}
+
+
+<!-- Bottom Buttons -->
+
+<div class="text-center mt-5 mb-5">
+
+    <a href="/index" class="action-btn btn btn-primary">
+
+        🔍 New Search
+
+    </a>
+
+    <a href="/dashboard" class="action-btn btn btn-success">
+
+        📊 Dashboard
+
+    </a>
+
+    <a href="/history" class="action-btn btn btn-warning text-white">
+
+        📜 History
+
+    </a>
+
+    <a href="/logout" class="action-btn btn btn-danger">
+
+        🚪 Logout
+
+    </a>
+
+</div>
+
+</div>
+
+<style>
+
+/* Bottom Buttons */
+
+.action-btn{
+
+margin:10px;
+
+padding:15px 35px;
+
+border-radius:18px;
+
+font-size:18px;
+
+font-weight:600;
+
+border:none;
+
+transition:.35s;
+
+box-shadow:0 10px 25px rgba(0,0,0,.30);
+
+}
+
+.action-btn:hover{
+
+transform:
+
+translateY(-8px)
+
+scale(1.08);
+
+box-shadow:
+
+0 20px 45px rgba(0,0,0,.45);
+
+}
+
+/* Floating Animation */
+
+.card{
+
+animation:floatCard 5s ease-in-out infinite;
+
+}
+
+@keyframes floatCard{
+
+0%,100%{
+
+transform:translateY(0px);
+
+}
+
+50%{
+
+transform:translateY(-8px);
+
+}
+
+}
+
+/* Mouse Tilt Effect */
+
+.card{
+
+transform-style:preserve-3d;
+
+}
+
+.card:hover{
+
+transition:.15s;
+
+}
+
+/* Badge Animation */
+
+.badge{
+
+animation:pulse 2s infinite;
+
+}
+
+@keyframes pulse{
+
+0%{
+
+transform:scale(1);
+
+}
+
+50%{
+
+transform:scale(1.08);
+
+}
+
+100%{
+
+transform:scale(1);
+
+}
+
+}
+
+/* Smooth Scroll */
+
+html{
+
+scroll-behavior:smooth;
+
+}
+
+</style>
+
+<script>
+
+/* 3D Mouse Effect */
+
+document.querySelectorAll(".card").forEach(card=>{
+
+card.addEventListener("mousemove",(e)=>{
+
+const rect=card.getBoundingClientRect();
+
+const x=e.clientX-rect.left;
+
+const y=e.clientY-rect.top;
+
+const rotateY=((x/rect.width)-0.5)*18;
+
+const rotateX=((y/rect.height)-0.5)*-18;
+
+card.style.transform=
+
+`perspective(1200px)
+ rotateX(${rotateX}deg)
+ rotateY(${rotateY}deg)
+ scale(1.02)`;
+
+});
+
+card.addEventListener("mouseleave",()=>{
+
+card.style.transform=
+
+"perspective(1200px) rotateX(0deg) rotateY(0deg) scale(1)";
+
+});
+
+});
+
+</script>
+
+</body>
+
+</html>
